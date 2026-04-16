@@ -1,0 +1,16 @@
+export const colors = {
+  background: '#FFFFFF',
+  surface: '#FFFFFF',
+  surfaceSecondary: '#F5F5F5',
+  border: '#F0F0F0',
+  primary: '#6D28D9',
+  primaryLight: '#EDE9FE',
+  text: '#1C1C1E',
+  textSecondary: '#6B7280',
+  textMuted: '#C7C7CC',
+  overlay: 'rgba(0,0,0,0.55)',
+  liked: '#EF4444',
+  likedBg: '#FEE2E2',
+  white: '#FFFFFF',
+  refreshTint: '#6D28D9',
+} as const;
