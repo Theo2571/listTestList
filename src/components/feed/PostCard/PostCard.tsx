@@ -1,32 +1,47 @@
-import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { Image } from 'expo-image';
+import React, { useCallback, useState } from 'react';
+import { Dimensions, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageLoadEventData } from 'expo-image';
 import { BlurView } from 'expo-blur';
 import { PostCardProps } from './PostCard.types';
 import { styles } from './PostCard.styles';
 import { AuthorInfo } from '../AuthorInfo';
 import { PostStats } from '../PostStats';
 import { PaidPostOverlay } from '../PaidPostOverlay';
+import { FEED_COVER_HEIGHT } from '../../../utils/constants';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const MAX_COVER_HEIGHT = 480;
 const PREVIEW_MAX_LINES = 2;
 
-export const PostCard: React.FC<PostCardProps> = React.memo(({ post }) => {
+export const PostCard: React.FC<PostCardProps> = React.memo(({ post, onPress }) => {
   const isPaid = post.tier === 'paid';
   const [expanded, setExpanded] = useState(false);
   const [truncated, setTruncated] = useState(false);
+  const [imageHeight, setImageHeight] = useState(FEED_COVER_HEIGHT);
+
+  const handleImageLoad = useCallback((e: ImageLoadEventData) => {
+    const { width, height } = e.source;
+    if (width > 0) {
+      const ratio = height / width;
+      setImageHeight(Math.min(Math.round(SCREEN_WIDTH * ratio), MAX_COVER_HEIGHT));
+    }
+  }, []);
+
+  const coverHeight = isPaid ? { height: FEED_COVER_HEIGHT } : { height: imageHeight };
 
   return (
-    <View style={styles.container}>
+    <Pressable onPress={onPress} style={styles.container}>
       <AuthorInfo author={post.author} />
 
-      <View style={styles.coverWrapper}>
+      <View style={[styles.coverWrapper, coverHeight]}>
         <Image
           source={{ uri: post.coverUrl }}
-          style={styles.coverImage}
+          style={[styles.coverImage, coverHeight]}
           contentFit="cover"
+          onLoad={isPaid ? undefined : handleImageLoad}
         />
         {isPaid && (
-          <BlurView intensity={60} tint="dark" style={styles.blurOverlay}>
+          <BlurView intensity={60} tint="dark" style={[styles.blurOverlay, coverHeight]}>
             <PaidPostOverlay />
           </BlurView>
         )}
@@ -67,7 +82,7 @@ export const PostCard: React.FC<PostCardProps> = React.memo(({ post }) => {
           <PostStats post={post} />
         </View>
       )}
-    </View>
+    </Pressable>
   );
 });
 

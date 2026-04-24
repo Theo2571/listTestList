@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Post } from '../../types/post.types';
-import { colors, spacing, typography } from '../../theme';
+import { colors, spacing, typography, radii } from '../../theme';
 import { formatCount } from '../../utils/formatCount';
 
 interface PostStatsProps {
@@ -23,7 +23,7 @@ export const PostStats: React.FC<PostStatsProps> = ({ post }) => (
     </View>
 
     <View style={styles.pill}>
-      <Ionicons name="chatbubble-outline" size={15} color={colors.textSecondary} />
+      <Ionicons name="chatbubble" size={15} color={colors.textSecondary} />
       <Text style={styles.count}>{formatCount(post.commentsCount)}</Text>
     </View>
   </View>
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceSecondary,
     paddingVertical: 6,
     paddingHorizontal: spacing.md,
-    borderRadius: 20,
+    borderRadius: radii.lg,
   },
   count: {
     ...typography.caption,

@@ -1,15 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { colors, spacing, typography } from '../../theme';
+import { colors, spacing, typography, radii } from '../../theme';
+import DollarsIcon from '../../../assets/dollars.svg';
 
 export const PaidPostOverlay: React.FC = () => (
   <View style={styles.container}>
-    <View style={styles.lockCircle}>
-      <Text style={styles.lockIcon}>🔒</Text>
-    </View>
-    <Text style={styles.title}>Контент скрыт пользователем.</Text>
-    <Text style={styles.subtitle}>Доступ открывается после доната</Text>
-    <TouchableOpacity style={styles.button} activeOpacity={0.85}>
+    <DollarsIcon width={56} height={56} />
+    <Text style={styles.description}>
+      {'Контент скрыт пользователем.\nДоступ откроется после доната'}
+    </Text>
+    <TouchableOpacity style={styles.button} activeOpacity={0.8}>
       <Text style={styles.buttonText}>Отправить донат</Text>
     </TouchableOpacity>
   </View>
@@ -20,43 +20,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: spacing.xl,
-    gap: spacing.xs,
+    paddingHorizontal: spacing.xxl,
+    gap: spacing.lg,
   },
-  lockCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.xs,
-  },
-  lockIcon: {
-    fontSize: 20,
-  },
-  title: {
-    ...typography.caption,
-    color: colors.white,
+  description: {
+    ...typography.body,
+    color: 'rgba(255,255,255,0.92)',
     textAlign: 'center',
-    fontWeight: '500',
-  },
-  subtitle: {
-    ...typography.caption,
-    color: colors.white,
-    textAlign: 'center',
-    opacity: 0.85,
-    marginBottom: spacing.sm,
+    lineHeight: 22,
+    fontWeight: '700',
   },
   button: {
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.sm + 2,
-    paddingHorizontal: spacing.xxl,
-    borderRadius: 20,
-    marginTop: spacing.xs,
+    backgroundColor: 'rgba(109,40,217,0.75)',
+    paddingVertical: spacing.md,
+    paddingHorizontal: 64,
+    borderRadius: radii.md,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+    alignItems: 'center',
   },
   buttonText: {
-    ...typography.caption,
+    ...typography.body,
     color: colors.white,
     fontWeight: '600',
   },

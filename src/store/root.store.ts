@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { PostStore } from './post.store';
+import { WsStore } from './ws.store';
 
 export class RootStore {
   postStore = new PostStore();
+  wsStore = new WsStore();
 }
 
 export const rootStore = new RootStore();

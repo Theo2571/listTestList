@@ -8,16 +8,22 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Post } from '../../types/post.types';
-import { usePosts } from '../../hooks/usePosts';
+import { useFeedPosts } from './hooks/useFeedPosts';
 import { useRefresh } from '../../hooks/useRefresh';
+import { FeedTabs } from './components/FeedTabs';
 import { Loader } from '../../components/common/Loader';
 import { ErrorState } from '../../components/common/ErrorState';
 import { EmptyState } from '../../components/common/EmptyState';
 import { PostCard } from '../../components/feed/PostCard/PostCard';
 import { ON_END_REACHED_THRESHOLD } from '../../utils/constants';
 import { colors } from '../../theme';
+import { RootStackParamList } from '../../navigation/types';
 import { styles } from './FeedScreen.styles';
+
+type FeedNavProp = NativeStackNavigationProp<RootStackParamList, 'Feed'>;
 
 const FeedFooter: React.FC<{ isFetchingNextPage: boolean; hasNextPage: boolean }> = ({
   isFetchingNextPage,
@@ -41,6 +47,7 @@ const FeedFooter: React.FC<{ isFetchingNextPage: boolean; hasNextPage: boolean }
 };
 
 export const FeedScreen: React.FC = () => {
+  const navigation = useNavigation<FeedNavProp>();
   const {
     posts,
     fetchNextPage,
@@ -49,13 +56,20 @@ export const FeedScreen: React.FC = () => {
     isLoading,
     isError,
     refetch,
-  } = usePosts();
+    activeTab,
+    setActiveTab,
+  } = useFeedPosts();
 
   const { refreshing, onRefresh } = useRefresh(refetch);
 
   const renderItem: ListRenderItem<Post> = useCallback(
-    ({ item }) => <PostCard post={item} />,
-    [],
+    ({ item }) => (
+      <PostCard
+        post={item}
+        onPress={item.tier === 'paid' ? undefined : () => navigation.navigate('PostDetail', { postId: item.id })}
+      />
+    ),
+    [navigation],
   );
 
   const keyExtractor = useCallback((item: Post) => item.id, []);
@@ -71,41 +85,39 @@ export const FeedScreen: React.FC = () => {
   }
 
   if (isError) {
-    return (
-      <ErrorState
-        message="Не удалось загрузить публикации"
-        onRetry={refetch}
-      />
-    );
+    return <ErrorState message="Не удалось загрузить публикации" onRetry={refetch} />;
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList<Post>
-        data={posts}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={<EmptyState />}
-        ListFooterComponent={
-          <FeedFooter
-            isFetchingNextPage={isFetchingNextPage}
-            hasNextPage={hasNextPage ?? false}
-          />
-        }
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={colors.refreshTint}
-            colors={[colors.refreshTint]}
-          />
-        }
-        onEndReached={onEndReached}
-        onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-        showsVerticalScrollIndicator={false}
-        removeClippedSubviews
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <FeedTabs activeTab={activeTab} onTabPress={setActiveTab} />
+      <View style={styles.container}>
+        <FlatList<Post>
+          data={posts}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={<EmptyState />}
+          ListFooterComponent={
+            <FeedFooter
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage ?? false}
+            />
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={colors.refreshTint}
+              colors={[colors.refreshTint]}
+            />
+          }
+          onEndReached={onEndReached}
+          onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
+          showsVerticalScrollIndicator={false}
+          removeClippedSubviews
+        />
+      </View>
     </SafeAreaView>
   );
 };

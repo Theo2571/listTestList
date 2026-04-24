@@ -1,31 +1,26 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { colors, spacing, typography } from '../../../theme';
-import { COVER_IMAGE_HEIGHT } from '../../../utils/constants';
+import { colors, spacing, typography, radii } from '../../../theme';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
-    marginBottom: spacing.xs,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   coverWrapper: {
     width: SCREEN_WIDTH,
-    height: COVER_IMAGE_HEIGHT,
     backgroundColor: colors.surfaceSecondary,
   },
   coverImage: {
     width: SCREEN_WIDTH,
-    height: COVER_IMAGE_HEIGHT,
   },
   blurOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     width: SCREEN_WIDTH,
-    height: COVER_IMAGE_HEIGHT,
   },
   content: {
     paddingHorizontal: spacing.lg,
@@ -58,14 +53,14 @@ export const styles = StyleSheet.create({
   },
   placeholderBarWide: {
     height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.border,
+    borderRadius: radii.sm,
+    backgroundColor: colors.surfaceSecondary,
     width: SCREEN_WIDTH * 0.7,
   },
   placeholderBarMedium: {
     height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.border,
+    borderRadius: radii.sm,
+    backgroundColor: colors.surfaceSecondary,
     width: SCREEN_WIDTH * 0.45,
   },
 });

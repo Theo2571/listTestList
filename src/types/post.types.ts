@@ -23,3 +23,11 @@ export interface Post {
   tier: PostTier;
   createdAt: string;
 }
+
+export interface Comment {
+  id: string;
+  postId: string;
+  author: Author;
+  text: string;
+  createdAt: string;
+}

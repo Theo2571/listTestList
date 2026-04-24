@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { colors, spacing, typography } from '../../theme';
+import { colors, spacing, typography, radii } from '../../theme';
 import IllustrationSticker from '../../../assets/illustration_sticker.svg';
 
 interface ErrorStateProps {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.xxxl,
-    borderRadius: 24,
+    borderRadius: radii.xl,
     width: '100%',
     alignItems: 'center',
   },
